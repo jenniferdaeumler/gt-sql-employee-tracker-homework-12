@@ -43,3 +43,7 @@ VALUES ("Thunder Rolls", "Garth Brooks", "Country");
 SELECT * FROM songs
 --Only songs from beatles?
 WHERE arist = "Beatles";
+
+
+--Table should have the following columns:
+--id, first_name, last_name, title, department, salary, manager
