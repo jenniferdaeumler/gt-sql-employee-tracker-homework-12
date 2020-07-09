@@ -43,7 +43,16 @@ SELECT * FROM department;
 SELECT * FROM role;
 SELECT * FROM employee;
 
+--View all employees table
 SELECT employee.id, employee.first_name AS first, employee.last_name AS last, role.title AS role, department.name AS department, role.salary, employee.manager_id
+FROM employee
+LEFT JOIN role 
+ON employee.role_id = role.id
+LEFT JOIN department 
+ON role.department_id = department.id;
+
+--View employees by department table
+SELECT department.name AS department, employee.first_name AS first, employee.last_name AS last, employee.id
 FROM employee
 LEFT JOIN role 
 ON employee.role_id = role.id

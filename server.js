@@ -44,7 +44,8 @@ function userPrompt() {
       }
       //If 'View All Employees by Dept' is selected, call viewDept() function
       else if(answer.action === "View All Employees by Department"){
-        console.log("View All Employees by Department Selected")
+        // console.log("View All Employees by Department Selected")
+        viewDept();
       }
       //If 'View All Employees by Manager' is selected, call viewManager() function
       else if(answer.action === "View All Employees by Manager"){
@@ -77,16 +78,30 @@ function userPrompt() {
 
 //Create function to view all employees
 function viewAll() {
-  //Variable for inner join to display all employees
-  const leftJoin = `SELECT employee.id, employee.first_name AS first, employee.last_name AS last, role.title AS role, department.name AS department, role.salary, employee.manager_id
+  //Variable for left join to display all employees
+  const allEmployeeJoin = `SELECT employee.id, employee.first_name AS first, employee.last_name AS last, role.title AS role, department.name AS department, role.salary, employee.manager_id
 FROM employee
 LEFT JOIN role 
 ON employee.role_id = role.id
 LEFT JOIN department 
 ON role.department_id = department.id;`
-  connection.query(leftJoin, function (err, data) {
+  connection.query(allEmployeeJoin, function (err, data) {
     if (err) throw err;
     console.table(data);
   })
+};
+
+function viewDept(){
+//Variable for left join to view employee by department
+const viewDepartmentJoin = `SELECT department.name AS department, employee.first_name AS first, employee.last_name AS last, employee.id
+FROM employee
+LEFT JOIN role 
+ON employee.role_id = role.id
+LEFT JOIN department 
+ON role.department_id = department.id;`
+connection.query(viewDepartmentJoin, function(err, data){
+  if (err) throw (err);
+  console.table(data);
+})
 };
 
