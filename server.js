@@ -33,3 +33,4 @@ connection.end();
 //Update Employee Role Questions: --> Which employee's role do you wish to update? (List of employees from DB) Which role do you wish to set for employee? (List of roles from DB)
 //View All Employees by Department --> Select a Department (List from DB) 
 //View All Employees by Manager --> Select a Manager (List from DB) 
+//Departments: Sales, Engineering, Finance, Legal
