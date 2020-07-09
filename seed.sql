@@ -72,6 +72,14 @@ SELECT employee.manager_id
 FROM employee
 WHERE employee.manager_id IS NOT NULL;
 
+--New employee, replcae all values with ?
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Judith","Grimes",2,1);
+
+--DELETE employee sql
+DELETE FROM employee 
+WHERE employee.id = ?;
+
 --Table should have the following columns:
 --id, first_name, last_name, title, department, salary, manager
 --Departments: Sales 1, Engineering 2, Finance 3, Legal 4
