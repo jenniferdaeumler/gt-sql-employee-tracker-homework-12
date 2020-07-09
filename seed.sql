@@ -59,6 +59,14 @@ ON employee.role_id = role.id
 LEFT JOIN department 
 ON role.department_id = department.id;
 
+--View employees by manager table
+SELECT employee.id, employee.first_name AS first, employee.last_name AS last, manager_id AS manager
+FROM employee
+LEFT JOIN role 
+ON employee.role_id = role.id
+LEFT JOIN department 
+ON role.department_id = department.id
+
 
 --Table should have the following columns:
 --id, first_name, last_name, title, department, salary, manager
