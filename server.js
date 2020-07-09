@@ -17,20 +17,44 @@ var connection = mysql.createConnection({
 });
 
 // connect to the mysql server and sql database
-connection.connect(function(err) {
+connection.connect(function (err) {
   if (err) throw err;
   console.log("connected as id " + connection.threadId + "\n");
-//   functionName();
-connection.end();
+  userPrompt();
 });
 
+//Start inquirer prompts
+//What would you like to do list?
+function userPrompt() {
+  inquirer
+    .prompt([
+      {
+        name: "action",
+        type: "list",
+        message: "What would you like to do?",
+        choices: ["View All Employees", "View All Employees by Department", "View All Employees by Manager", "Add Employee", "Remove Employee", "Update Employee Role", "Update Employee Manager"]
+      }
+    ])
+    .then(function (answer) {
+      console.log(answer.action)
+      //If 'View All Employees' is selected, call viewAll() function
+      viewAll();
+    })
+};
 
-//Start inquirer prompt
-//**Q: What would you like to do? O:View All Employees, View All Employees by Department, View All Employees by Manager,Add Employee, Remove Employee, Update Employee Role, Update Employee Manager
-//Add Employee Questions--> What is the employee's first name? What is the employee's last name? What is the employee's role? (List of options: Sales Lead, Salesperson, Lead Engineer, Software Engineer, Account Manager, Accountant, Legal Team Lead, Lawyer) Who is the employee's manager? (List of manager options from DB)
-//Remove Employee Questions: --> Which employee do you wish to remove? (List of employees from DB)
-//Update Employee Manager Questions: --> Which employee's manager do you wish to update? (List of employees from DB) Which employee do you wish to set as manager for selected employee? (List of employees from DB)
-//Update Employee Role Questions: --> Which employee's role do you wish to update? (List of employees from DB) Which role do you wish to set for employee? (List of roles from DB)
-//View All Employees by Department --> Select a Department (List from DB) 
-//View All Employees by Manager --> Select a Manager (List from DB) 
-//Departments: Sales, Engineering, Finance, Legal
+//Create function to view all employees
+function viewAll() {
+  //Variable for inner join to display all employees
+  const leftJoin = `SELECT employee.id, employee.first_name AS first, employee.last_name AS last, role.title AS role, department.name AS department, role.salary, employee.manager_id
+FROM employee
+LEFT JOIN role 
+ON employee.role_id = role.id
+LEFT JOIN department 
+ON role.department_id = department.id;`
+  connection.query(leftJoin, function (err, data) {
+    if (err) throw err;
+    console.table(data);
+  })
+  connection.end();
+};
+
