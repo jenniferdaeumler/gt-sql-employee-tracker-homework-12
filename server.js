@@ -45,13 +45,13 @@ function userPrompt() {
 //Create function to view all employees
 function viewAll() {
   //Variable for inner join to display all employees
-  const innerJoin = `SELECT employee.id, employee.first_name AS first, employee.last_name AS last, role.title AS role, department.name AS department, role.salary, employee.manager_id
+  const leftJoin = `SELECT employee.id, employee.first_name AS first, employee.last_name AS last, role.title AS role, department.name AS department, role.salary, employee.manager_id
 FROM employee
 LEFT JOIN role 
 ON employee.role_id = role.id
 LEFT JOIN department 
 ON role.department_id = department.id;`
-  connection.query(innerJoin, function (err, data) {
+  connection.query(leftJoin, function (err, data) {
     if (err) throw err;
     console.table(data);
   })
