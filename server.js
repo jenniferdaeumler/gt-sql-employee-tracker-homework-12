@@ -26,7 +26,6 @@ connection.connect(function (err) {
 //Start inquirer prompts
 //What would you like to do list?
 function userPrompt() {
-  // prompt for info about the item being put up for auction
   inquirer
     .prompt([
       {
@@ -37,7 +36,25 @@ function userPrompt() {
       }
     ])
     .then(function (answer) {
-      console.log(answer)
-      connection.end();
+      console.log(answer.action)
+      //If 'View All Employees' is selected, call viewAll() function
+      viewAll();
     })
 };
+
+//Create function to view all employees
+function viewAll() {
+  //Variable for inner join to display all employees
+  const innerJoin = `SELECT employee.id, employee.first_name AS first, employee.last_name AS last, role.title AS role, department.name AS department, role.salary, employee.manager_id
+FROM employee
+LEFT JOIN role 
+ON employee.role_id = role.id
+LEFT JOIN department 
+ON role.department_id = department.id;`
+  connection.query(innerJoin, function (err, data) {
+    if (err) throw err;
+    console.table(data);
+  })
+  connection.end();
+};
+
