@@ -162,16 +162,17 @@ function addEmployee() {
           }
 
         }]
-      ).then(function (answer) {
+      ).then(function (answers) {
+        console.log(answers);
         //Variable for INSERT INTO employee
-        const insertIntoEmployee = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
-    VALUES (?,?,?,?);
-    `
-        connection.query(insertIntoEmployee, [answers.firstname, answers.lastname, answers.role, answers.manager],
-          function (err, data) {
-            if (err) throw err;
-            console.table(data);
-          })
+    //     const insertIntoEmployee = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
+    // VALUES (?,?,?,?);
+    // `
+    //     connection.query(insertIntoEmployee, [answers.firstname, answers.lastname, answers.role, answers.manager],
+    //       function (err, data) {
+    //         if (err) throw err;
+    //         console.table(data);
+    //       })
       })
   })
 };
