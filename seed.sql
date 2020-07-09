@@ -67,6 +67,10 @@ ON employee.role_id = role.id
 LEFT JOIN department 
 ON role.department_id = department.id
 
+--Manager list when not null
+SELECT employee.manager_id
+FROM employee
+WHERE employee.manager_id IS NOT NULL;
 
 --Table should have the following columns:
 --id, first_name, last_name, title, department, salary, manager
