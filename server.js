@@ -37,8 +37,12 @@ function userPrompt() {
     ])
     .then(function (answer) {
       console.log(answer.action)
-      //If 'View All Employees' is selected, call viewAll() function
-      viewAll();
+      //Conditional for selected action
+      if (answer.action === "View All Employees") {
+        //If 'View All Employees' is selected, call viewAll() function
+        viewAll();
+      }
+      connection.end();
     })
 };
 
@@ -55,6 +59,5 @@ ON role.department_id = department.id;`
     if (err) throw err;
     console.table(data);
   })
-  connection.end();
 };
 
