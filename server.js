@@ -76,18 +76,23 @@ function userPrompt() {
         return userPrompt();
       }
       connection.end();
+      
     })
 };
 
 //Create function to view all employees
 function viewAll() {
   //Variable for left join to display all employees
-  const allEmployeeJoin = `SELECT employee.id, employee.first_name AS first, employee.last_name AS last, role.title AS role, department.name AS department, role.salary, employee.manager_id
-FROM employee
-LEFT JOIN role 
-ON employee.role_id = role.id
-LEFT JOIN department 
-ON role.department_id = department.id;`
+  const allEmployeeJoin = `SELECT employee.id, CONCAT(employee.first_name, " ", employee.last_name) as "Employee", 
+  role.title AS Role, department.name AS Department, role.salary AS Salary, CONCAT(manager.first_name, " ", manager.last_name) as "Manager Name",employee.manager_id AS "Manager ID"
+  FROM employee
+  LEFT JOIN role 
+  ON employee.role_id = role.id
+  LEFT JOIN department 
+  ON role.department_id = department.id
+  LEFT JOIN employee manager 
+    ON employee.manager_id = manager.id
+  ORDER BY department DESC;`
   connection.query(allEmployeeJoin, function (err, data) {
     if (err) throw err;
     console.table(data);
@@ -97,12 +102,13 @@ ON role.department_id = department.id;`
 //Create function to view all employees by department
 function viewDept() {
   //Variable for left join to view employee by department
-  const viewDepartmentJoin = `SELECT department.name AS department, employee.first_name AS first, employee.last_name AS last, employee.id
-FROM employee
-LEFT JOIN role 
-ON employee.role_id = role.id
-LEFT JOIN department 
-ON role.department_id = department.id;`
+  const viewDepartmentJoin = `SELECT department.name AS department, CONCAT(employee.first_name, " ", employee.last_name) as "Employee" , employee.id
+  FROM employee
+  LEFT JOIN role 
+  ON employee.role_id = role.id
+  LEFT JOIN department 
+  ON role.department_id = department.id
+  ORDER BY department.name DESC;`
   connection.query(viewDepartmentJoin, function (err, data) {
     if (err) throw (err);
     console.table(data);
@@ -112,12 +118,15 @@ ON role.department_id = department.id;`
 //Create function to view all employees by department
 function viewManager() {
   //Variable for left join to view employee by department
-  const viewManagerJoin = `SELECT employee.id, employee.first_name AS first, employee.last_name AS last, manager_id AS manager
-  FROM employee
-  LEFT JOIN role 
-  ON employee.role_id = role.id
-  LEFT JOIN department 
-  ON role.department_id = department.id`
+  const viewManagerJoin = `SELECT employee.manager_id AS "Manager ID",
+  CONCAT(manager.first_name, " ", manager.last_name) as "Manager Name",
+   employee.id AS "Employee ID",
+   CONCAT(employee.first_name, " ", employee.last_name) as "Employee"
+    FROM employee employee
+    LEFT JOIN employee manager 
+    ON employee.manager_id = manager.id
+    WHERE employee.manager_id IS NOT NULL
+    ORDER BY "Manager Name" DESC;`
   connection.query(viewManagerJoin, function (err, data) {
     if (err) throw (err);
     console.table(data);
@@ -126,19 +135,30 @@ function viewManager() {
 
 //Add Employee Function
 function addEmployee() {
-  connection.query(`SELECT employee.manager_id FROM employee WHERE employee.manager_id 
-          IS NOT NULL;`, function (err, res) {
+  const selectManagerQuery = `
+  SELECT DISTINCT employee.manager_id AS "Manager ID", 
+  CONCAT(manager.first_name, " ", manager.last_name) as "Manager"
+  FROM employee employee
+  LEFT JOIN employee manager 
+  ON employee.manager_id = manager.id
+  WHERE employee.manager_id IS NOT NULL
+  ;`
+  connection.query(selectManagerQuery, function (err, data) {
+    console.log(data);
     if (err) throw err;
+    // const managerArray = data.map(() => {
+    //   // console.log(data);
+    // });
     //New prompts:
     inquirer
       .prompt([
         {
-          name: "firstname",
+          name: "first_name",
           type: "input",
           message: "What is the employee's first name?",
         },
         {
-          name: "lastname",
+          name: "last_name",
           type: "input",
           message: "What is the employee's last name?",
         },
@@ -152,18 +172,18 @@ function addEmployee() {
           name: "manager",
           type: "list",
           message: "Who is the employee's manager?",
-          choices: function () {
-            const choicesArray = [];
-            for (let i = 0; i < res.length; i++) {
-              choicesArray.push(res[i].manager_id);
-            }
-            return choicesArray;
-            // console.log(choicesArray);
+          choices: 
+          function () {
+          const managersArray = [];
+          for (let i = 0; i < data.length; i++) {
+            managersArray.push(data[i].Manager);
           }
+          return managersArray;
+          // console.log(managersArray);
+        }}
 
-        }]
-      ).then(function (answers) {
-        console.log(answers);
+        // }
+      ]).then(function (answers) {
         if (err) throw err;
         console.table(answers);
       })
@@ -184,11 +204,12 @@ function addEmployee() {
 // connection.end(); process.exit();
 
 
-
 //Is it because of my two connections going at same time? }) on 176 may be issue?
 
 function removeEmployee() {
-  connection.query(`SELECT employee.id AS id, employee.first_name, employee.last_name`, function (err, res) {
+  const removeEmployeeQuery = `SELECT employee.id AS id, CONCAT(employee.first_name, " ", employee.last_name) as "Employee" 
+  FROM employee;`
+  connection.query(removeEmployeeQuery, function (err, res) {
     if (err) throw err;
     inquirer
       .prompt([
@@ -199,12 +220,26 @@ function removeEmployee() {
           choices: function () {
             let choicesArray = [];
             for (let i = 0; i < res.length; i++) {
-              choicesArray.push(res[i].id);
+              choicesArray.push(res[i].Employee);
             }
             return choicesArray;
             // console.log(choicesArray);
           }
 
-        }])
+        }]).then(function (answer) {
+          console.log(answer);
+          // when finished prompting, insert a new item into the db with that info
+          // const deleteQuery = `DELETE FROM employee WHERE employee.id = ?;`
+          // connection.query(
+          //   deleteQuery, [answers.id],
+          //   function(err) {
+          //     if (err) throw err;
+          //     console.log("Employee was deleted.");
+          //     // re-prompt the user for if they want to bid or post
+          //     start();
+          //   }
+          // );
+        });
   })
 }
+
