@@ -112,12 +112,16 @@ ON role.department_id = department.id;`
 //Create function to view all employees by department
 function viewManager() {
   //Variable for left join to view employee by department
-  const viewManagerJoin = `SELECT employee.id, employee.first_name AS first, employee.last_name AS last, manager_id AS manager
-  FROM employee
-  LEFT JOIN role 
-  ON employee.role_id = role.id
-  LEFT JOIN department 
-  ON role.department_id = department.id`
+  const viewManagerJoin = `
+  SELECT employee.id, 
+  employee.first_name AS Name, 
+  employee.last_name AS "Last Name" , 
+  CONCAT(manager.first_name, " ", manager.last_name) as "Manager Name",
+  employee.manager_id AS "Manager ID"
+  FROM employee employee
+  LEFT JOIN employee manager 
+  ON employee.manager_id = manager.id
+  ;`
   connection.query(viewManagerJoin, function (err, data) {
     if (err) throw (err);
     console.table(data);
