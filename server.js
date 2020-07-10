@@ -97,12 +97,13 @@ ON role.department_id = department.id;`
 //Create function to view all employees by department
 function viewDept() {
   //Variable for left join to view employee by department
-  const viewDepartmentJoin = `SELECT department.name AS department, employee.first_name AS first, employee.last_name AS last, employee.id
-FROM employee
-LEFT JOIN role 
-ON employee.role_id = role.id
-LEFT JOIN department 
-ON role.department_id = department.id;`
+  const viewDepartmentJoin = `SELECT department.name AS department, CONCAT(employee.first_name, " ", employee.last_name) as "Employee" , employee.id
+  FROM employee
+  LEFT JOIN role 
+  ON employee.role_id = role.id
+  LEFT JOIN department 
+  ON role.department_id = department.id
+  ORDER BY department.name DESC;`
   connection.query(viewDepartmentJoin, function (err, data) {
     if (err) throw (err);
     console.table(data);
@@ -112,16 +113,15 @@ ON role.department_id = department.id;`
 //Create function to view all employees by department
 function viewManager() {
   //Variable for left join to view employee by department
-  const viewManagerJoin = `
-  SELECT employee.id, 
-  employee.first_name AS Name, 
-  employee.last_name AS "Last Name" , 
+  const viewManagerJoin = `SELECT employee.manager_id AS "Manager ID",
   CONCAT(manager.first_name, " ", manager.last_name) as "Manager Name",
-  employee.manager_id AS "Manager ID"
-  FROM employee employee
-  LEFT JOIN employee manager 
-  ON employee.manager_id = manager.id
-  ;`
+   employee.id AS "Employee ID",
+   CONCAT(employee.first_name, " ", employee.last_name) as "Employee"
+    FROM employee employee
+    LEFT JOIN employee manager 
+    ON employee.manager_id = manager.id
+    WHERE employee.manager_id IS NOT NULL
+    ORDER BY "Manager Name" DESC;`
   connection.query(viewManagerJoin, function (err, data) {
     if (err) throw (err);
     console.table(data);
@@ -223,6 +223,19 @@ function removeEmployee() {
             // console.log(choicesArray);
           }
 
-        }])
+        }]) .then(function(answer) {
+          console.log(answer);
+          // when finished prompting, insert a new item into the db with that info
+          // const deleteQuery = `DELETE FROM employee WHERE employee.id = ?;`
+          // connection.query(
+          //   deleteQuery, [answers.id],
+          //   function(err) {
+          //     if (err) throw err;
+          //     console.log("Employee was deleted.");
+          //     // re-prompt the user for if they want to bid or post
+          //     start();
+          //   }
+          // );
+        });
   })
 }

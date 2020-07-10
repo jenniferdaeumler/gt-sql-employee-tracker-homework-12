@@ -8,19 +8,24 @@ LEFT JOIN department
 ON role.department_id = department.id;
 
 --View employees by department table
-SELECT department.name AS department, employee.first_name AS first, employee.last_name AS last, employee.id
+SELECT department.name AS department, CONCAT(employee.first_name, " ", employee.last_name) as "Employee" , employee.id
 FROM employee
 LEFT JOIN role 
 ON employee.role_id = role.id
 LEFT JOIN department 
-ON role.department_id = department.id;
+ON role.department_id = department.id
+ORDER BY department.name DESC;
 
 --View employees by manager table
-  SELECT employee.manager_id AS "Manager ID", 
-  CONCAT(manager.first_name, " ", manager.last_name) as "Manager"
+ SELECT employee.manager_id AS "Manager ID",
+CONCAT(manager.first_name, " ", manager.last_name) as "Manager Name",
+ employee.id AS "Employee ID",
+ CONCAT(employee.first_name, " ", employee.last_name) as "Employee"
   FROM employee employee
   LEFT JOIN employee manager 
   ON employee.manager_id = manager.id
+  WHERE employee.manager_id IS NOT NULL
+  ORDER BY "Manager Name" DESC;
   
 
 --Manager list when not null
@@ -35,6 +40,7 @@ VALUES ("Judith","Grimes",2,1);
 --DELETE employee sql
 DELETE FROM employee 
 WHERE employee.id = ?;
+
 
 --Table should have the following columns:
 --id, first_name, last_name, title, department, salary, manager
