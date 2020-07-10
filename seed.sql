@@ -43,6 +43,7 @@ SELECT * FROM department;
 SELECT * FROM role;
 SELECT * FROM employee;
 
+--View all employees table
 SELECT employee.id, employee.first_name AS first, employee.last_name AS last, role.title AS role, department.name AS department, role.salary, employee.manager_id
 FROM employee
 LEFT JOIN role 
@@ -50,6 +51,34 @@ ON employee.role_id = role.id
 LEFT JOIN department 
 ON role.department_id = department.id;
 
+--View employees by department table
+SELECT department.name AS department, employee.first_name AS first, employee.last_name AS last, employee.id
+FROM employee
+LEFT JOIN role 
+ON employee.role_id = role.id
+LEFT JOIN department 
+ON role.department_id = department.id;
+
+--View employees by manager table
+SELECT employee.id, employee.first_name AS first, employee.last_name AS last, manager_id AS manager
+FROM employee
+LEFT JOIN role 
+ON employee.role_id = role.id
+LEFT JOIN department 
+ON role.department_id = department.id
+
+--Manager list when not null
+SELECT employee.manager_id
+FROM employee
+WHERE employee.manager_id IS NOT NULL;
+
+--New employee, replcae all values with ?
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Judith","Grimes",2,1);
+
+--DELETE employee sql
+DELETE FROM employee 
+WHERE employee.id = ?;
 
 --Table should have the following columns:
 --id, first_name, last_name, title, department, salary, manager
