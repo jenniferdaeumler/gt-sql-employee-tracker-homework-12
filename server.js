@@ -131,28 +131,29 @@ function viewManager() {
 //Add Employee Function
 function addEmployee() {
   const selectManagerQuery = `
-  SELECT employee.manager_id AS "Manager ID", 
+  SELECT DISTINCT employee.manager_id AS "Manager ID", 
   CONCAT(manager.first_name, " ", manager.last_name) as "Manager"
   FROM employee employee
   LEFT JOIN employee manager 
   ON employee.manager_id = manager.id
+  WHERE employee.manager_id IS NOT NULL
   ;`
   connection.query(selectManagerQuery, function (err, data) {
     console.log(data);
     if (err) throw err;
-    const managerArray = data.map(() =>{
-      // console.log(data);
-    });
+    // const managerArray = data.map(() => {
+    //   // console.log(data);
+    // });
     //New prompts:
     inquirer
       .prompt([
         {
-          name: "firstname",
+          name: "first_name",
           type: "input",
           message: "What is the employee's first name?",
         },
         {
-          name: "lastname",
+          name: "last_name",
           type: "input",
           message: "What is the employee's last name?",
         },
@@ -166,19 +167,18 @@ function addEmployee() {
           name: "manager",
           type: "list",
           message: "Who is the employee's manager?",
-          choices: managerArray
-          // function () {
-            // const choicesArray = [];
-            // for (let i = 0; i < res.length; i++) {
-            //   choicesArray.push(res[i].manager_id);
-            // }
-            // return choicesArray;
-            // console.log(choicesArray);
+          choices: 
+          function () {
+          const managersArray = [];
+          for (let i = 0; i < data.length; i++) {
+            managersArray.push(data[i].Manager);
           }
+          return managersArray;
+          console.log(managersArray);
+        }}
 
         // }
-      ]
-      ).then(function (answers) {
+      ]).then(function (answers) {
         console.log(answers);
         if (err) throw err;
         console.table(answers);
@@ -223,7 +223,7 @@ function removeEmployee() {
             // console.log(choicesArray);
           }
 
-        }]) .then(function(answer) {
+        }]).then(function (answer) {
           console.log(answer);
           // when finished prompting, insert a new item into the db with that info
           // const deleteQuery = `DELETE FROM employee WHERE employee.id = ?;`
