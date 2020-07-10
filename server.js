@@ -296,7 +296,7 @@ function addDepartment() {
         }
       ])
       .then(function (responses) {
-        const departmentInsertQuery = `insert into department (name) values ("${responses.name}")`;
+        const departmentInsertQuery = `insert into department (name) values ("${responses.roleId}")`;
 
         connection.query(departmentInsertQuery, function (err, data) {
           if (err) console.log(err);
