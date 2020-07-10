@@ -36,8 +36,11 @@ function userPrompt() {
           "View All Employees",
           "View All Employees by Department",
           "View All Employees by Manager",
+          "View All Roles",
+          "View All Departments",
           "Add Employee",
           "Add Role",
+          "Add Department",
           "Exit",
         ],
       },
@@ -52,34 +55,44 @@ function userPrompt() {
       //If 'View All Employees by Dept' is selected, call viewDept() function
       else if (answer.action === "View All Employees by Department") {
         // console.log("View All Employees by Department Selected")
-        viewDept();
+        viewEmpDept();
       }
       //If 'View All Employees by Manager' is selected, call viewManager() function
       else if (answer.action === "View All Employees by Manager") {
         // console.log("View All Employees by Manager Selected")
         viewManager();
       }
+      //If 'View All Roles' is selected, call viewRoles() function
+      else if (answer.action === "View All Roles") {
+        // console.log("Add Employee Selected")
+        viewRoles();
+      }
+      //If 'View All Departments' is selected, call viewDepartments() function
+      else if (answer.action === "View All Departments") {
+        // console.log("Add Employee Selected")
+        viewDepartments();
+      }
       //If 'Add Employee' is selected, call addEmployee() function
       else if (answer.action === "Add Employee") {
         // console.log("Add Employee Selected")
         addEmployee();
       }
-      //If 'Remove Employee' is selected, call removeEmployee() function
-      else if (answer.action === "Remove Employee") {
-        console.log("Remove Employee Selected");
-        removeEmployee();
-      }
-      //If 'Update Employee Role' is selected, call updateRole() function
+      //If 'Add Role' is selected, call addRole() function
       else if (answer.action === "Add Role") {
-        console.log("Add role");
+        // console.log("Add role");
         addRole();
+      }
+      //If 'Add Department' is selected, call updateRole() function
+      else if (answer.action === "Add Department") {
+        // console.log("Add Department");
+        addDepartment();
       }
       //If 'Exit' is selected, return userPrompt()
       else {
         console.log("Exit Selected");
         connection.end();
       }
-      
+
     });
 }
 
@@ -104,7 +117,7 @@ function viewAll() {
 }
 
 //Create function to view all employees by department
-function viewDept() {
+function viewEmpDept() {
   //Variable for left join to view employee by department
   const viewDepartmentJoin = `SELECT department.name AS department, CONCAT(employee.first_name, " ", employee.last_name) as "Employee" , employee.id
   FROM employee
@@ -141,15 +154,6 @@ function viewManager() {
 
 //Add Employee Function
 function addEmployee() {
-  /*const selectManagerQuery = `
-  SELECT DISTINCT employee.manager_id AS "Manager ID", 
-  CONCAT(manager.first_name, " ", manager.last_name) as "Manager"
-  FROM employee employee
-  LEFT JOIN employee manager 
-  ON employee.manager_id = manager.id
-  WHERE employee.manager_id IS NOT NULL
-  ;`*/
-
   const selectEmployeeQuery = "select * from employee";
   const selectRolesQuery = "select * from role";
 
@@ -210,30 +214,30 @@ function addEmployee() {
   });
 }
 
-//Add department
-function addRole(){
+//Add Role
+function addRole() {
   const selectRolesQuery = "select * from role";
   const selectDepartmentQuery = "select * from department";
 
-    connection.query(selectRolesQuery, function (err, roleData) {
+  connection.query(selectRolesQuery, function (err, roleData) {
+    if (err) console.log(err);
+
+    connection.query(selectDepartmentQuery, function (err, departmentData) {
       if (err) console.log(err);
 
-      connection.query(selectDepartmentQuery, function (err, departmentData) {
-        if (err) console.log(err);
+      const roles = roleData.map((role) => {
+        return {
+          name: role.title,
+          value: role.id,
+        };
+      });
 
-        const roles = roleData.map((role) => {
-          return {
-            name: role.title,
-            value: role.id,
-          };
-        });
-  
-        const departments = departmentData.map((department) => {
-          return {
-            name: department.name,
-            value: department.id,
-          };
-        });
+      const departments = departmentData.map((department) => {
+        return {
+          name: department.name,
+          value: department.id,
+        };
+      });
 
       inquirer
         .prompt([
@@ -241,6 +245,7 @@ function addRole(){
             type: "input",
             name: "roleId",
             message: "What role would you like to add?",
+            choices: roles
           },
           {
             type: "input",
@@ -266,5 +271,50 @@ function addRole(){
   });
 }
 
+//Add Department
+function addDepartment() {
+  const selectDepartmentQuery = "select * from department";
 
-//Add role
+  connection.query(selectDepartmentQuery, function (err, departmentData) {
+    if (err) console.log(err);
+
+
+    const departments = departmentData.map((department) => {
+      return {
+        name: department.name,
+        value: department.id,
+      };
+    });
+
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "roleId",
+          message: "What department would you like to add?",
+          choices: departments
+        }
+      ])
+      .then(function (responses) {
+        const departmentInsertQuery = `insert into department (name) values ("${responses.name}")`;
+
+        connection.query(departmentInsertQuery, function (err, data) {
+          if (err) console.log(err);
+          userPrompt();
+        });
+      });
+  });
+}
+
+//View All Roles
+function viewDepartments() {
+  //Variable for left join to view employee by department
+  const viewAllDepartments = `SELECT department.name AS Departments FROM department ORDER BY department.name DESC;`;
+  connection.query(viewAllDepartments, function (err, data) {
+    if (err) throw err;
+    console.table(data);
+    userPrompt();
+  });
+}
+
+//View All Departments
