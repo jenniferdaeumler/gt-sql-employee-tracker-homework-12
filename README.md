@@ -1,10 +1,13 @@
 # MySQL Homework: Employee Tracker
-[Link to GitHub Repo] (https://github.com/jenniferdaeumler/gt-sql-employee-tracker-homework-12)
+
+[Link to GitHub Repo](https://github.com/jenniferdaeumler/gt-sql-employee-tracker-homework-12)
 
 ## Description
-This application allows users to utilize a SQL database via the server.  Users can view all employees, view employees by department and by manager. Users can also add new employees via prompts, and data will be added to the mySQL database.  Users can also update and delete employees via prompts, and the data will be stored in mySQL as well. 
+
+This application allows users to utilize a SQL database via the server. Users can view all employees, view employees by department and by manager. Users can also add new employees via prompts, and data will be added to the mySQL database. Users can also update and delete employees via prompts, and the data will be stored in mySQL as well.
 
 ## Table of Contents
+
 1. [Installation](#installation)
 2. [Usage](#usage)
 3. [Credits](#credits)
@@ -12,20 +15,29 @@ This application allows users to utilize a SQL database via the server.  Users c
 5. [Contributing](#contributing)
 
 ## Installation
+
 Clone the repo, and run in the server. Follow the prompts via node.js.
 
 ## Usage
-After installing the proper npm packages.  Run "node server.js" in the terminal.  Select the action desired via arrow keys and hitting enter. Follow the prompts request, and when complete, click exit. 
 
-![Homepage of App](public/assets/homepage.png)
-![Note Taking Page](public/assets/notepage.png)
+After installing the proper npm packages. Run "node server.js" in the terminal. Select the action desired via arrow keys and hitting enter. Follow the prompts request, and when complete, click exit.
+
+![Homepage of App](assets/readme.png)
+
+![Note Taking Page](assets/readme2.png)
+
+![Homepage of App](assets/readme3.png)
+
+![Note Taking Page](assets/readme4.png)
 
 ## Credits
+
 Solo projected completed as homework for Georgia Tech Full-Stack Flex Program.
-Trilogy Education provided assets. 
+Trilogy Education provided assets.
 
 ## MIT-License
-Copyright (c) [2020] [Jennifer Daeumler]
+
+Copyright (c) [2020][jennifer daeumler]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
