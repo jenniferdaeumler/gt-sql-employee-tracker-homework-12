@@ -32,6 +32,16 @@ CONCAT(manager.first_name, " ", manager.last_name) as "Manager Name",
 SELECT employee.manager_id
 FROM employee
 WHERE employee.manager_id IS NOT NULL;
+--this one better -->
+SELECT employee.manager_id AS "Manager ID",
+  CONCAT(manager.first_name, " ", manager.last_name) as "Manager Name",
+   employee.id AS "Employee ID",
+   CONCAT(employee.first_name, " ", employee.last_name) as "Employee"
+    FROM employee employee
+    LEFT JOIN employee manager 
+    ON employee.manager_id = manager.id
+    WHERE employee.manager_id IS NOT NULL
+    ORDER BY "Manager Name" DESC;
 
 --New employee, replcae all values with ?
 INSERT INTO employee (first_name, last_name, role_id, manager_id)

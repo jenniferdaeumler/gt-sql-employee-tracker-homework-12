@@ -174,12 +174,11 @@ function addEmployee() {
             managersArray.push(data[i].Manager);
           }
           return managersArray;
-          console.log(managersArray);
+          // console.log(managersArray);
         }}
 
         // }
       ]).then(function (answers) {
-        console.log(answers);
         if (err) throw err;
         console.table(answers);
       })
@@ -198,7 +197,6 @@ function addEmployee() {
 //     console.table(data);
 //   })
 // connection.end(); process.exit();
-
 
 
 //Is it because of my two connections going at same time? }) on 176 may be issue?
