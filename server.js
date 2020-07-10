@@ -37,7 +37,7 @@ function userPrompt() {
           "View All Employees by Department",
           "View All Employees by Manager",
           "Add Employee",
-          "Update Employee Role",
+          "Add Role",
           "Exit",
         ],
       },
@@ -70,12 +70,9 @@ function userPrompt() {
         removeEmployee();
       }
       //If 'Update Employee Role' is selected, call updateRole() function
-      else if (answer.action === "Update Employee Role") {
-        console.log("Update Employee Role Selected");
-      }
-      //If 'Update Employee Manager' is selected, call updateManager() function
-      else if (answer.action === "Update Employee Manager") {
-        console.log("Update Employee Manager Selected");
+      else if (answer.action === "Add Role") {
+        console.log("Add role");
+        addRole();
       }
       //If 'Exit' is selected, return userPrompt()
       else {
@@ -214,6 +211,60 @@ function addEmployee() {
 }
 
 //Add department
+function addRole(){
+  const selectRolesQuery = "select * from role";
+  const selectDepartmentQuery = "select * from department";
+
+    connection.query(selectRolesQuery, function (err, roleData) {
+      if (err) console.log(err);
+
+      connection.query(selectDepartmentQuery, function (err, departmentData) {
+        if (err) console.log(err);
+
+        const roles = roleData.map((role) => {
+          return {
+            name: role.title,
+            value: role.id,
+          };
+        });
+  
+        const departments = departmentData.map((department) => {
+          return {
+            name: department.name,
+            value: department.id,
+          };
+        });
+
+      inquirer
+        .prompt([
+          {
+            type: "input",
+            name: "roleId",
+            message: "What role would you like to add?",
+          },
+          {
+            type: "input",
+            name: "salary",
+            message: "What is the salary of this role (NO commas or $ sign)?",
+          },
+          {
+            type: "list",
+            name: "departmentId",
+            message: "What department would you like this role to?",
+            choices: departments,
+          },
+        ])
+        .then(function (responses) {
+          const roleInsertQuery = `insert into role (title, salary, department_id) values ("${responses.roleId}", ${responses.salary},${responses.departmentId})`;
+
+          connection.query(roleInsertQuery, function (err, data) {
+            if (err) console.log(err);
+            userPrompt();
+          });
+        });
+    });
+  });
+}
 
 
 //Add role
