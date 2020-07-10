@@ -173,15 +173,15 @@ function addEmployee() {
 
 //Variable for INSERT INTO employee
 //comment out below to work kind of
-const insertIntoEmployee = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
-    VALUES (?,?,?,?);
-    `;
-connection.query(insertIntoEmployee, choicesArray,
-  function (err, data) {
-    if (err) throw err;
-    console.table(data);
-  })
-connection.end(); process.exit();
+// const insertIntoEmployee = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
+//     VALUES (?,?,?,?);
+//     `;
+// connection.query(insertIntoEmployee, choicesArray,
+//   function (err, data) {
+//     if (err) throw err;
+//     console.table(data);
+//   })
+// connection.end(); process.exit();
 
 
 
