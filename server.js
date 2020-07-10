@@ -141,7 +141,7 @@ function addEmployee() {
     console.log(data);
     if (err) throw err;
     const managerArray = data.map(() =>{
-      return res;
+      // console.log(data);
     });
     //New prompts:
     inquirer
