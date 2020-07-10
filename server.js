@@ -76,18 +76,23 @@ function userPrompt() {
         return userPrompt();
       }
       connection.end();
+      
     })
 };
 
 //Create function to view all employees
 function viewAll() {
   //Variable for left join to display all employees
-  const allEmployeeJoin = `SELECT employee.id, employee.first_name AS first, employee.last_name AS last, role.title AS role, department.name AS department, role.salary, employee.manager_id
-FROM employee
-LEFT JOIN role 
-ON employee.role_id = role.id
-LEFT JOIN department 
-ON role.department_id = department.id;`
+  const allEmployeeJoin = `SELECT employee.id, CONCAT(employee.first_name, " ", employee.last_name) as "Employee", 
+  role.title AS Role, department.name AS Department, role.salary AS Salary, CONCAT(manager.first_name, " ", manager.last_name) as "Manager Name",employee.manager_id AS "Manager ID"
+  FROM employee
+  LEFT JOIN role 
+  ON employee.role_id = role.id
+  LEFT JOIN department 
+  ON role.department_id = department.id
+  LEFT JOIN employee manager 
+    ON employee.manager_id = manager.id
+  ORDER BY department DESC;`
   connection.query(allEmployeeJoin, function (err, data) {
     if (err) throw err;
     console.table(data);
@@ -237,3 +242,4 @@ function removeEmployee() {
         });
   })
 }
+
