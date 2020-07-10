@@ -130,9 +130,19 @@ function viewManager() {
 
 //Add Employee Function
 function addEmployee() {
-  connection.query(`SELECT employee.manager_id FROM employee WHERE employee.manager_id 
-          IS NOT NULL;`, function (err, res) {
+  const selectManagerQuery = `
+  SELECT employee.manager_id AS "Manager ID", 
+  CONCAT(manager.first_name, " ", manager.last_name) as "Manager"
+  FROM employee employee
+  LEFT JOIN employee manager 
+  ON employee.manager_id = manager.id
+  ;`
+  connection.query(selectManagerQuery, function (err, data) {
+    console.log(data);
     if (err) throw err;
+    const managerArray = data.map(() =>{
+      return res;
+    });
     //New prompts:
     inquirer
       .prompt([
@@ -156,16 +166,18 @@ function addEmployee() {
           name: "manager",
           type: "list",
           message: "Who is the employee's manager?",
-          choices: function () {
-            const choicesArray = [];
-            for (let i = 0; i < res.length; i++) {
-              choicesArray.push(res[i].manager_id);
-            }
-            return choicesArray;
+          choices: managerArray
+          // function () {
+            // const choicesArray = [];
+            // for (let i = 0; i < res.length; i++) {
+            //   choicesArray.push(res[i].manager_id);
+            // }
+            // return choicesArray;
             // console.log(choicesArray);
           }
 
-        }]
+        // }
+      ]
       ).then(function (answers) {
         console.log(answers);
         if (err) throw err;
@@ -192,7 +204,9 @@ function addEmployee() {
 //Is it because of my two connections going at same time? }) on 176 may be issue?
 
 function removeEmployee() {
-  connection.query(`SELECT employee.id AS id, employee.first_name, employee.last_name`, function (err, res) {
+  const removeEmployeeQuery = `SELECT employee.id AS id, CONCAT(employee.first_name, " ", employee.last_name) as "Employee" 
+  FROM employee;`
+  connection.query(removeEmployeeQuery, function (err, res) {
     if (err) throw err;
     inquirer
       .prompt([
@@ -203,7 +217,7 @@ function removeEmployee() {
           choices: function () {
             let choicesArray = [];
             for (let i = 0; i < res.length; i++) {
-              choicesArray.push(res[i].id);
+              choicesArray.push(res[i].Employee);
             }
             return choicesArray;
             // console.log(choicesArray);

@@ -16,12 +16,12 @@ LEFT JOIN department
 ON role.department_id = department.id;
 
 --View employees by manager table
-SELECT employee.id, employee.first_name AS first, employee.last_name AS last, manager_id AS manager
-FROM employee
-LEFT JOIN role 
-ON employee.role_id = role.id
-LEFT JOIN department 
-ON role.department_id = department.id
+  SELECT employee.manager_id AS "Manager ID", 
+  CONCAT(manager.first_name, " ", manager.last_name) as "Manager"
+  FROM employee employee
+  LEFT JOIN employee manager 
+  ON employee.manager_id = manager.id
+  
 
 --Manager list when not null
 SELECT employee.manager_id
