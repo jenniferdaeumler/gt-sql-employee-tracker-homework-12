@@ -307,10 +307,9 @@ function addDepartment() {
 }
 
 //View All Roles
-function viewDepartments() {
-  //Variable for left join to view employee by department
-  const viewAllDepartments = `SELECT department.name AS Departments FROM department ORDER BY department.name DESC;`;
-  connection.query(viewAllDepartments, function (err, data) {
+function viewRoles() {
+  const viewAllRoles = `SELECT role.title AS Role, role.salary AS Salary, role.department_ID AS Department FROM role ORDER BY role.title DESC;`;
+  connection.query(viewAllRoles, function (err, data) {
     if (err) throw err;
     console.table(data);
     userPrompt();
@@ -318,3 +317,11 @@ function viewDepartments() {
 }
 
 //View All Departments
+function viewDepartments() {
+  const viewAllDepartments = `SELECT department.name AS Departments FROM department ORDER BY department.name ASC;`;
+  connection.query(viewAllDepartments, function (err, data) {
+    if (err) throw err;
+    console.table(data);
+    userPrompt();
+  });
+}
