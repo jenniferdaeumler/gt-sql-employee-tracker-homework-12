@@ -60,7 +60,7 @@ function userPrompt() {
       //If 'Remove Employee' is selected, call removeEmployee() function
       else if (answer.action === "Remove Employee") {
         console.log("Remove Employee Selected")
-        removeEmployee() 
+        removeEmployee()
       }
       //If 'Update Employee Role' is selected, call updateRole() function
       else if (answer.action === "Update Employee Role") {
@@ -153,7 +153,7 @@ function addEmployee() {
           type: "list",
           message: "Who is the employee's manager?",
           choices: function () {
-            let choicesArray = [];
+            const choicesArray = [];
             for (let i = 0; i < res.length; i++) {
               choicesArray.push(res[i].manager_id);
             }
@@ -164,40 +164,47 @@ function addEmployee() {
         }]
       ).then(function (answers) {
         console.log(answers);
-        //Variable for INSERT INTO employee
-        const insertIntoEmployee = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
+        if (err) throw err;
+        console.table(answers);
+      })
+  })
+  // connection.end(); process.exit();
+};
+
+//Variable for INSERT INTO employee
+//comment out below to work kind of
+const insertIntoEmployee = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
     VALUES (?,?,?,?);
     `;
-        connection.query(insertIntoEmployee, [answers.firstname, answers.lastname, answers.role, answers.manager],
-          function (err, data) {
-            if (err) throw err;
-            console.table(data);
-          })
-        connection.end(); process.exit();
-      })
-
+connection.query(insertIntoEmployee, choicesArray,
+  function (err, data) {
+    if (err) throw err;
+    console.table(data);
   })
-};
+connection.end(); process.exit();
+
+
+
 //Is it because of my two connections going at same time? }) on 176 may be issue?
 
 function removeEmployee() {
   connection.query(`SELECT employee.id AS id, employee.first_name, employee.last_name`, function (err, res) {
-if (err) throw err;
-  inquirer
-    .prompt([
-      {
-        name: "delete",
-        type: "list",
-        message: "Which employee do you wish to delete?",
-        choices: function () {
-          let choicesArray = [];
-          for (let i = 0; i < res.length; i++) {
-            choicesArray.push(res[i].id);
+    if (err) throw err;
+    inquirer
+      .prompt([
+        {
+          name: "delete",
+          type: "list",
+          message: "Which employee do you wish to delete?",
+          choices: function () {
+            let choicesArray = [];
+            for (let i = 0; i < res.length; i++) {
+              choicesArray.push(res[i].id);
+            }
+            return choicesArray;
+            // console.log(choicesArray);
           }
-          return choicesArray;
-          // console.log(choicesArray);
-        }
 
-      }])
-})
+        }])
+  })
 }
