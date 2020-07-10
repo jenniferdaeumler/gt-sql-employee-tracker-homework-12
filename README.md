@@ -4,7 +4,7 @@
 
 ## Description
 
-This application allows users to utilize a SQL database via the server. Users can view all employees, view employees by department and by manager. Users can also add new employees via prompts, and data will be added to the mySQL database. Users can also update and delete employees via prompts, and the data will be stored in mySQL as well.
+This application allows users to utilize a SQL database via the server. Users can view all employees, view employees by department and by manager. Users can also view roles and departments. Users can also add new employees via prompts, and data will be added to the mySQL database. 
 
 ## Table of Contents
 
